@@ -1,4 +1,4 @@
-package hudson.plugins.sauce_ondemand;
+package hudson.plugins.selenium_builder;
 
 import com.saucelabs.ci.SeleniumBuilderManager;
 import hudson.EnvVars;
@@ -15,6 +15,11 @@ import java.io.File;
 import java.io.IOException;
 
 /**
+ * Provides the backend logic for running <a href="https://github.com/sebuilder/se-builder">Selenium Builder</a> scripts from Jenkins.
+ *
+ * The bulk of the logic is contained in the <a href="https://github.com/saucelabs/ci-sauce">ci-sauce</a> library, which is shared across Jenkins/Hudson/Bamboo plugin
+ * projects.
+ *
  * @author Ross Rowe
  */
 public class SeleniumBuilderBuilder extends Builder {
@@ -30,9 +35,7 @@ public class SeleniumBuilderBuilder extends Builder {
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
         EnvVars env = build.getEnvironment(listener);
         SeleniumBuilderManager seleniumBuilderManager = new SeleniumBuilderManager();
-        boolean result = seleniumBuilderManager.executeSeleniumBuilder(new File(build.getWorkspace().getRemote(), getScriptFile()), env, listener.getLogger());
-
-        return result;
+        return seleniumBuilderManager.executeSeleniumBuilder(new File(build.getWorkspace().getRemote(), getScriptFile()), env, listener.getLogger());
     }
 
     public String getScriptFile() {
