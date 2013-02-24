@@ -10,7 +10,7 @@
       <excludeFolder url="file://$MODULE_DIR$/target/classes" />
       <excludeFolder url="file://$MODULE_DIR$/target/generated-sources/groovy-stubs" />
       <excludeFolder url="file://$MODULE_DIR$/target/inject-tests" />
-      <excludeFolder url="file://$MODULE_DIR$/target/selenium-builder-plugin" />
+      <excludeFolder url="file://$MODULE_DIR$/target/selenium-builder" />
       <excludeFolder url="file://$MODULE_DIR$/target/test-classes" />
     </content>
     <orderEntry type="inheritedJdk" />
