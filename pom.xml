@@ -96,7 +96,7 @@
         <dependency>
             <groupId>com.saucelabs</groupId>
             <artifactId>ci-sauce</artifactId>
-            <version>1.26-SNAPSHOT</version>
+            <version>1.26</version>
             <scope>compile</scope>
         </dependency>
 
