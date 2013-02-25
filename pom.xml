@@ -7,7 +7,7 @@
     </parent>
 
     <artifactId>selenium-builder</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>hpi</packaging>
     <name>Jenkins Selenium Builder plugin</name>
     <description>Jenkins plugin which invokes scripts using the Selenium Builder interpreter</description>
