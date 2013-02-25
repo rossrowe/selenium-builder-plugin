@@ -3,6 +3,7 @@ package hudson.plugins.selenium_builder;
 import com.saucelabs.ci.SeleniumBuilderManager;
 import hudson.EnvVars;
 import hudson.Extension;
+import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
@@ -15,6 +16,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,7 +28,7 @@ import java.util.logging.Logger;
  *
  * @author Ross Rowe
  */
-public class SeleniumBuilderBuilder extends Builder {
+public class SeleniumBuilderBuilder extends Builder implements Serializable {
 
     private static final Logger logger = Logger.getLogger(SeleniumBuilderBuilder.class.getName());
 
@@ -45,7 +47,8 @@ public class SeleniumBuilderBuilder extends Builder {
         }
 
         try {
-            return Computer.currentComputer().getChannel().call(new SeleniumBuilderInvoker(build, listener));
+            EnvVars env = build.getEnvironment(listener);
+            return Computer.currentComputer().getChannel().call(new SeleniumBuilderInvoker(env, build.getWorkspace(), listener));
         } catch (IOException e) {
             throw e;
         } catch (InterruptedException e) {
@@ -74,19 +77,23 @@ public class SeleniumBuilderBuilder extends Builder {
         }
     }
 
-    private class SeleniumBuilderInvoker implements Callable<Boolean, Exception> {
-        private AbstractBuild<?, ?> build;
+    private class SeleniumBuilderInvoker implements Serializable, Callable<Boolean, Exception> {
         private BuildListener listener;
+        private EnvVars env;
+        private FilePath workspace;
 
-        public SeleniumBuilderInvoker(AbstractBuild<?, ?> build, BuildListener listener) {
-            this.build = build;
+
+        public SeleniumBuilderInvoker(EnvVars env, FilePath workspace, BuildListener listener) {
+            this.env = env;
+            this.workspace = workspace;
             this.listener = listener;
         }
 
         public Boolean call() throws InterruptedException, IOException {
-            EnvVars env = build.getEnvironment(listener);
+
             SeleniumBuilderManager seleniumBuilderManager = new SeleniumBuilderManager();
-            return seleniumBuilderManager.executeSeleniumBuilder(new File(build.getWorkspace().getRemote(), getScriptFile()), env, listener.getLogger());
+            return seleniumBuilderManager.executeSeleniumBuilder(
+                    new File(workspace.getRemote(), getScriptFile()), env, listener.getLogger());
         }
     }
 }
